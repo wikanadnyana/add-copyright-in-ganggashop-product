@@ -1,21 +1,30 @@
+import os
 from PIL import Image, ImageDraw, ImageFont
 
-img = Image.open('images/test.png')
-width, height = img.size
-
-draw = ImageDraw.Draw(img)
-text = "PySeek"
-
-font = ImageFont.truetype('poppins.ttf', 80)
-
-textwidth, textheight = draw.textsize(text, font=font)
-
-x = (width - textwidth) // 2
-y = (height - textheight) // 2
-
-draw.text((x, y), text, font=font, fill=(0, 0, 0, 50))  
-
-img.save('images/watermarked.png') 
-
-img = Image.open('images/watermarked.png')
-img.show()
+for i in range(384, 434):
+    namaFile = f'IMG_3{i}'
+    file_path = f'images-potrait/{namaFile}.JPG'
+    
+    if os.path.exists(file_path):
+        image = Image.open(file_path).convert("RGBA")
+        imagerotate = image.rotate(-90, expand=True)
+        
+        width, height = image.size
+        
+        txt = Image.new('RGBA', (height, width), (255, 255, 255, 0))
+        
+        font = ImageFont.truetype("poppins.ttf", 200)
+        d = ImageDraw.Draw(txt)    
+        text = "ganggaartshop.com"
+        
+        textwidth, textheight = d.textsize(text, font=font)
+        
+        x = (height - textwidth) // 2
+        y = (width - textheight) // 2
+        
+        d.text((x, y), "ganggaartshop.com", fill=(0, 0, 0, 95), font=font)
+        
+        combined = Image.alpha_composite(imagerotate, txt)
+        combined.save(f'output/{namaFile}.png')
+    else:
+        print(f"File '{file_path}' tidak ditemukan.")
