@@ -1,34 +1,21 @@
 from PIL import Image, ImageDraw, ImageFont
-import os
 
-# Fungsi untuk menambahkan watermark ke gambar
-def add_watermark(input_image_path, output_image_path, watermark_text, opacity):
-    base = Image.open(input_image_path).convert("RGBA")
-    width, height = base.size
+img = Image.open('images/test.png')
+width, height = img.size
 
-    # Membuat gambar untuk watermark
-    watermark = Image.new("RGBA", base.size)
-    draw = ImageDraw.Draw(watermark)
+draw = ImageDraw.Draw(img)
+text = "PySeek"
 
-    # Menggunakan font dan ukuran yang sesuai
-    font = ImageFont.truetype("arial.ttf", 36)  # Ganti dengan path font yang sesuai
-    text_width, text_height = draw.textsize(watermark_text, font)
-    x = (width - text_width) // 2
-    y = (height - text_height) // 2
+font = ImageFont.truetype('poppins.ttf', 80)
 
-    # Menggambar teks watermark dengan opacitas yang ditentukan
-    draw.text((x, y), watermark_text, font=font, fill=(255, 255, 255, int(255 * opacity)))
+textwidth, textheight = draw.textsize(text, font=font)
 
-    # Menambahkan watermark ke gambar utama
-    watermarked = Image.alpha_composite(base, watermark)
+x = (width - textwidth) // 2
+y = (height - textheight) // 2
 
-    # Simpan gambar yang telah ditambahkan watermark
-    watermarked.save(output_image_path, "PNG")
+draw.text((x, y), text, font=font, fill=(0, 0, 0, 50))  
 
-if __name__ == "__main__":
-    input_image_path = "images/test.png"  # Ganti dengan path gambar input
-    output_image_path = "images/testnew.png"  # Ganti dengan path tempat menyimpan hasil gambar
-    watermark_text = "GanggaArtShop.com"
-    opacity = 0.5  # Opacity berkisar antara 0 (transparan) hingga 1 (solid)
+img.save('images/watermarked.png') 
 
-    add_watermark(input_image_path, output_image_path, watermark_text, opacity)
+img = Image.open('images/watermarked.png')
+img.show()
